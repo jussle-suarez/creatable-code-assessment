@@ -10,11 +10,29 @@ test.beforeEach(async ({ page }) => {
     await contentPage.navigateToContentPage();
 })
 
-test('Verify key elements in Content page are visible', async ({ page }) => {
+test('[TC1] Verify key elements in Content page are visible', async ({ page }) => {
     await expect(contentPage.contentHeader).toBeVisible();
     await expect(contentPage.searchField).toBeVisible();
     await expect(contentPage.campaignModerationWorkflow).toBeVisible();
     await expect(contentPage.creatorSearchAndBook).toBeVisible();
     await expect(contentPage.imageAsset).toBeVisible();
     await expect(contentPage.productImage).toBeVisible();
+});
+
+test('[TC2] Verify Search feature works as expected', async ({ page }) => {
+    await test.step('User search for valid data', async () => {
+        await contentPage.searchData('Campaign moderation workflow');
+        await expect(contentPage.campaignModerationWorkflow).toBeVisible();
+        await page.pause();
+    })
+    await test.step('User search for invalid data', async () => {
+        await contentPage.clearSearchField();
+        await contentPage.searchData('Non Existing Data');
+        await expect(contentPage.campaignModerationWorkflow).toBeHidden();
+        await expect(contentPage.creatorSearchAndBook).toBeHidden();
+        await expect(contentPage.imageAsset).toBeHidden();
+        await expect(contentPage.productImage).toBeHidden();
+        await expect(contentPage.noContentText).toBeVisible();
+        await expect(contentPage.noContentImage).toBeVisible();
+    })
 });
