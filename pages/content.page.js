@@ -10,6 +10,7 @@ class ContentPage extends BasePage {
         // Header
         this.contentHeader = page.getByRole('heading', { name: 'Content' });
         this.searchField = page.getByRole('textbox', { name: 'Search' });
+        this.searchFieldClearButton = page.getByTestId('CloseIcon');
 
         // Content table
         this.campaignModerationWorkflow = page.getByTestId('content-239485273').getByText('Campaign moderation workflow');
@@ -20,6 +21,24 @@ class ContentPage extends BasePage {
         // No Content message
         this.noContentText = page.getByText('You have no content to display.');
         this.noContentImage = page.getByTestId('PhotoLibraryIcon');
+
+        // Campaign moderation workflow content
+        this.content1Status = page.getByTestId('content-239485273').getByText('Published');
+        this.content1ProductCount = page.getByTestId('content-239485273').getByRole('button', { name: '3' });
+        this.content1CreatedDate = page.getByTestId('content-239485273').getByText('04/26/');
+
+        // Campaign moderation workflow content details
+        this.contentDetailsStatus = page.locator('#content-details-dialog').getByText('Published');
+        this.contentDetailsProductCount = page.locator('#content-details-dialog').getByText('3', { exact: true });
+        this.deleteButton = page.getByRole('button', { name: 'Delete' });
+        this.submitForReviewButton = page.getByRole('button', { name: 'Submit for review' });
+        this.shareButton = page.getByRole('button', { name: 'Share' });
+        this.titleField = page.getByRole('textbox', { name: 'Title' });
+        this.captionField = page.getByRole('textbox', { name: 'Caption' });
+        this.matchButton = page.getByRole('button', { name: 'Match' });
+        this.copyAllButton = page.getByRole('button', { name: 'Copy all' });
+        this.cancelButton = page.getByRole('button', { name: 'Cancel' });
+        this.saveButton = page.getByRole('button', { name: 'Save' });
     }
 
     async navigateToContentPage() {
