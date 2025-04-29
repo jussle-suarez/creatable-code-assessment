@@ -1,5 +1,6 @@
 class BasePage {
     constructor(page) {
+        this.page = page;
         this.loginField = page.getByRole('textbox').and(page.locator('//input[@class="MuiInputBase-input MuiOutlinedInput-input"]'));
         this.passwordField = page.getByRole('textbox');
         this.nextButton = page.getByRole('button', { name: 'Next' });

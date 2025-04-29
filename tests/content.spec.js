@@ -7,8 +7,14 @@ test.beforeEach(async ({ page }) => {
     contentPage = new ContentPage(page);
     await page.goto('/');
     await contentPage.login();
+    await contentPage.navigateToContentPage();
 })
 
-test('test', async ({ page }) => {
-    // start writing test
+test('Verify key elements in Content page are visible', async ({ page }) => {
+    await expect(contentPage.contentHeader).toBeVisible();
+    await expect(contentPage.searchField).toBeVisible();
+    await expect(contentPage.campaignModerationWorkflow).toBeVisible();
+    await expect(contentPage.creatorSearchAndBook).toBeVisible();
+    await expect(contentPage.imageAsset).toBeVisible();
+    await expect(contentPage.productImage).toBeVisible();
 });
