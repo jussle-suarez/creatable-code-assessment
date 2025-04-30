@@ -110,6 +110,7 @@ class ContentPage extends BasePage {
     async addProduct(productName) {
         await this.searchDataFromMatchProductsTable(productName);
         const addProductButton = this.page.getByRole('row', { name: `${productName}` }).getByTestId('AddIcon');
+        await this.page.waitForLoadState('networkidle');
         await addProductButton.click();
         await this.clearSearchMatchProductsField();
     }
@@ -167,7 +168,7 @@ class ContentPage extends BasePage {
         }
         let attempCount = 0;
         // wait until spinner is removed on dom then click Done button
-        while (await this.processingSpinner.isVisible()  && attempCount < 25 ) {
+        while (await this.processingSpinner.isVisible()  && attempCount < 50) {
             await this.page.waitForTimeout(500);
             attempCount++;           
             await this.doneButton.click();
