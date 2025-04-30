@@ -98,6 +98,29 @@ test('[TC6] Verify Content Product counts is updated after adding more product.'
         countFromContentPage = await contentPage.getProductCountInContentPage(productCountContentPage);
         await expect(countFromContentDetailsPage).toBe(Number(countFromContentPage));
     });
+    await test.step('Revert Product Image Count', async () => {
+        await page.goto('/');
+        await contentPage.navigateToContentPage();
+        await contentPage.productImage.click();
+        await contentPage.matchButton.click();
+        await contentPage.removeProduct('Schluter Kerdi-Drain 4in. Grate Matte White Pure');
+        await contentPage.removeProduct('Schluter Shelf Triangular Corner Floral Bronze')
+    });
+});
+
+test('[TC7] Verify Share button works as expected.', async ({ page }) => {
+    await contentPage.productImage.click();
+    await contentPage.shareButton.click();
+    await test.step('Verify Share Content modal shows on click of Share button', async () => {
+        await expect(contentPage.shareContentHeader).toBeVisible();
+        await expect(contentPage.shareContentModal).toBeVisible();
+        await expect(contentPage.instagramMenu).toBeVisible();
+        await expect(contentPage.twitterMenu).toBeVisible();
+        await expect(contentPage.linkedinMenu).toBeVisible();
+        await expect(contentPage.threadsMenu).toBeVisible();
+        await expect(contentPage.pinterestMenu).toBeVisible();
+        await expect(contentPage.facebookMenu).toBeVisible();
+    });
 });
 
 test.afterEach(async ({ page }) => {
@@ -115,14 +138,5 @@ test.afterEach(async ({ page }) => {
         const title = page.getByTestId('content-239485319');
         const contentTitle = await contentPage.getContentTitle(title);
         await expect(contentTitle).toBe('Product image');
-    });
-    await test.step('Revert Product Image Count', async () => {
-        await page.goto('/');
-        await contentPage.navigateToContentPage();
-        await page.pause();
-        await contentPage.productImage.click();
-        await contentPage.matchButton.click();
-        await contentPage.removeProduct('Schluter Kerdi-Drain 4in. Grate Matte White Pure');
-        await contentPage.removeProduct('Schluter Shelf Triangular Corner Floral Bronze')
     });
 })

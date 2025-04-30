@@ -41,6 +41,17 @@ class ContentPage extends BasePage {
         // Match products table
         this.searchMatchProductField = page.getByRole('textbox', { name: 'Search' })
         this.matchProductCloseButton = page.getByRole('banner').getByRole('button');
+    
+        // Share content modla
+        this.shareContentHeader = page.locator('div').filter({ hasText: /^Share content$/ });
+        this.shareContentModal = page.locator('div').filter({ hasText: /^InstagramTwitterLinkedInThreadsPinterestFacebook$/ }).first();
+        this.instagramMenu = page.locator('a').filter({ hasText: 'Instagram' });
+        this.twitterMenu = page.locator('a').filter({ hasText: 'Twitter' });
+        this.linkedinMenu = page.locator('a').filter({ hasText: 'LinkedIn' });
+        this.threadsMenu = page.locator('a').filter({ hasText: 'Threads' });
+        this.pinterestMenu = page.locator('a').filter({ hasText: 'Pinterest' });
+        this.facebookMenu = page.locator('a').filter({ hasText: 'Facebook' });
+        
     }
 
     async navigateToContentPage() {
