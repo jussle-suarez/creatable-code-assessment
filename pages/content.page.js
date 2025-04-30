@@ -115,12 +115,17 @@ class ContentPage extends BasePage {
         await this.clearSearchMatchProductsField();
     }
 
-    async addProductForVideoContent(productName) {
-        await this.searchDataFromMatchProductsTable(productName);
-        const productRowButton = this.page.getByRole('row', { name: `${productName}` });
+    async addProductForVideoContent() {
+        const productRow = await this.page.getByRole('cell', { name: 'Schluter Kerdi-Drain 4in. Grate Bronze Curve' });
+        const productRow2 = await this.page.getByRole('cell', { name: 'Schluter Designbase-SL In' });
+        await productRow.click();
+        await productRow2.click();
         await this.page.waitForLoadState('networkidle');
-        await productRowButton.click();
-        await this.clearSearchMatchProductsField();
+        // await this.searchDataFromMatchProductsTable(productName);
+        // const productRowButton = this.page.getByRole('row', { name: `${productName}` });
+        // await this.page.waitForLoadState('networkidle');
+        // await productRowButton.click();
+        // await this.clearSearchMatchProductsField();
     }
 
     async removeProduct(productName) {
@@ -183,7 +188,7 @@ class ContentPage extends BasePage {
         }
     }
 
-    async createVideoContent(title, caption, productName) {
+    async createVideoContent(title, caption) {
         await this.createButton.hover();
         await this.createVideoContentButton.click();
         await this.uploadVideo();
@@ -191,9 +196,8 @@ class ContentPage extends BasePage {
         await this.titleField.pressSequentially(title + this.testId, { delay: 50 });
         await this.captionField.click();
         await this.captionField.pressSequentially(caption + this.testId, { delay: 50 });
-        await this.nextButton.click();
-        await this.addProductForVideoContent(productName);
-        await this.page.waitForLoadState('networkidle');
+        await this.nextButton.click();\
+        await this.addProductForVideoContent();
         await this.doneButton.click();
     }
 

@@ -56,9 +56,7 @@ test.only('TC_003 - Verify user is able to create video content', async ({ page 
         await expect(contentPage.noContentImage).toBeVisible();
     });
     await test.step('Create Video Content', async ({ page }) => {
-        await contentPage.createVideoContent('Video Content '
-            , 'This is a description of video content related to '
-            , 'Schluter Kerdi-Drain 4in. Grate Matte White Pure'
+        await contentPage.createVideoContent('Video Content ', 'This is a description of video content related to '
         );
     });
     await test.step('Verify Created video content is displayed in Content page', async () => {
