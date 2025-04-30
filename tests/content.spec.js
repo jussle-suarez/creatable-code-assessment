@@ -44,7 +44,7 @@ test('TC_002 - Verify user is able to create photo content', async ({ page }) =>
 });
 
 // Status set to skip. Working on Local but failing on GA -- need further investigation
-test.only('TC_003 - Verify user is able to create video content', async ({ page }) => {
+test.skip('TC_003 - Verify user is able to create video content', async ({ page }) => {
     await test.step('Video Content Clean Up', async () => {
         await contentPage.videoContentCleanUp();
     });

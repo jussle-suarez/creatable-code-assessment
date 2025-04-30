@@ -122,11 +122,6 @@ class ContentPage extends BasePage {
         await productRow.click();
         await productRow2.click();
         await this.page.waitForLoadState('networkidle');
-        // await this.searchDataFromMatchProductsTable(productName);
-        // const productRowButton = this.page.getByRole('row', { name: `${productName}` });
-        // await this.page.waitForLoadState('networkidle');
-        // await productRowButton.click();
-        // await this.clearSearchMatchProductsField();
     }
 
     async removeProduct(productName) {
