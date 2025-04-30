@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
     await contentPage.navigateToContentPage();
 })
 
-test('[TC1] Verify key elements in Content page are visible', async ({ page }) => {
+test('[TC_001] Verify key elements in Content page are visible', async ({ page }) => {
     await expect(page).toHaveURL('https://creators.creatable.io/5a018367/content');
     await expect(contentPage.contentHeader).toBeVisible();
     await expect(contentPage.searchField).toBeVisible();
@@ -20,7 +20,7 @@ test('[TC1] Verify key elements in Content page are visible', async ({ page }) =
     await expect(contentPage.productImage).toBeVisible();
 });
 
-test('[TC2] Verify Search feature works as expected', async ({ page }) => {
+test('[TC_002] Verify Search feature works as expected', async ({ page }) => {
     await test.step('User search for valid data', async () => {
         await contentPage.searchData('Campaign moderation workflow');
         await expect(contentPage.campaignModerationWorkflow).toBeVisible();
@@ -37,7 +37,7 @@ test('[TC2] Verify Search feature works as expected', async ({ page }) => {
     });
 });
 
-test('[TC3] Verify Key Elements of content details are displayed', async ({ page }) => {
+test('[TC_003] Verify Key Elements of content details are displayed', async ({ page }) => {
     await contentPage.campaignModerationWorkflow.click();
     await test.step('Verify key elements are displayed', async () => {
         await expect(contentPage.contentDetailsStatus).toBeVisible();
@@ -54,7 +54,7 @@ test('[TC3] Verify Key Elements of content details are displayed', async ({ page
     });
 });
 
-test('[TC4] Verify Product count from Content page and Content details are equal.', async ({ page }) => {
+test('[TC_004] Verify Product count from Content page and Content details are equal.', async ({ page }) => {
     // Pass product count displayed in Content page 
     productCountContentPage = page.getByTestId('content-239485319').getByRole('button');
     countFromContentPage = await contentPage.getProductCountInContentPage(productCountContentPage);
@@ -67,7 +67,7 @@ test('[TC4] Verify Product count from Content page and Content details are equal
     });
 });
 
-test('[TC5] Verify Content Title is updated after updating via Content Details page', async ({ page }) => {
+test('[TC_005] Verify Content Title is updated after updating via Content Details page', async ({ page }) => {
     await contentPage.productImage.click();
     await test.step('Update content title', async () => {
         await contentPage.titleField.clear();
@@ -82,7 +82,7 @@ test('[TC5] Verify Content Title is updated after updating via Content Details p
     });
 });
 
-test('[TC6] Verify Content Product counts is updated after adding more product.', async ({ page }) => {
+test('[TC_006] Verify Content Product counts is updated after adding more product.', async ({ page }) => {
     await contentPage.productImage.click();
     await test.step('Add more product', async () => {
         countFromContentDetailsPage = await contentPage.getProductCountInContentDetailsPage();
@@ -108,7 +108,7 @@ test('[TC6] Verify Content Product counts is updated after adding more product.'
     });
 });
 
-test('[TC7] Verify Share button works as expected.', async ({ page }) => {
+test('[TC_007] Verify Share button works as expected.', async ({ page }) => {
     await contentPage.productImage.click();
     await contentPage.shareButton.click();
     await test.step('Verify Share Content modal shows on click of Share button', async () => {
@@ -123,7 +123,7 @@ test('[TC7] Verify Share button works as expected.', async ({ page }) => {
     });
 });
 
-test('[TC8] Verify Copy link button works as expected.', async ({ page }) => {
+test('[TC_008] Verify Copy link button works as expected.', async ({ page }) => {
     await test.step('Verify toast message will show on click of copy link button', async () => {
         await contentPage.productImage.click();
         await contentPage.clickCopyLinkButton('Schluter Designbase-SL In Corner 6 3/8in. Stainless Steel');
@@ -139,7 +139,7 @@ test('[TC8] Verify Copy link button works as expected.', async ({ page }) => {
     });
 });
 
-test('[TC9] Verify Copy All link button works as expected.', async ({ page }) => {
+test('[TC_009] Verify Copy All link button works as expected.', async ({ page }) => {
     await test.step('Verify toast message will show on click of copy link button', async () => {
         await contentPage.productImage.click();
         await contentPage.copyAllButton.click();
