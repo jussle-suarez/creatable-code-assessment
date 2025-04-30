@@ -47,7 +47,7 @@ test('TC_003 - Verify user is able to create video content', async ({ page }) =>
     await test.step('Video Content Clean Up', async () => {
         await contentPage.videoContentCleanUp();
     });  
-    await test.step('Verify Photo Content is cleaned up', async ({}) => {
+    await test.step('Verify Video Content is cleaned up', async ({}) => {
         await contentPage.navigateToContentPage();
         await contentPage.clearSearchField();
         await contentPage.searchData('Video Content ' + testId);

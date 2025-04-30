@@ -23,8 +23,8 @@ class ContentPage extends BasePage {
         this.nextButton = page.getByRole('button', { name: 'Next' });
         this.previousButton = page.locator('#photo-prev-step');
         this.processingSpinner = page.getByText('Processing...');
+        this.pleaseWaitText = page.locator('div').filter({ hasText: /^Please wait until your photo is done uploading\.$/ }).nth(1);
         this.doneButton = page.getByRole('button', { name: 'Done' });
-
         this.campaignModerationWorkflow = page.getByTestId('content-239485273').getByText('Campaign moderation workflow');
         this.creatorSearchAndBook = page.getByTestId('content-239485300').getByText('Creator search and book');
         this.imageAsset = page.getByTestId('content-239485309').getByText('Image asset');
@@ -165,9 +165,13 @@ class ContentPage extends BasePage {
         if (uploadType === 'useSelectedProductPhoto') {
             await this.clickProductPhoto(productName);
         }
-        await this.page.waitForTimeout(15000);
-        await this.page.waitForLoadState('networkidle');
-        await this.doneButton.click();
+        let attempCount = 0;
+        // wait until spinner is removed on dom then click Done button
+        while (await this.processingSpinner.isVisible()  && attempCount < 25 ) {
+            await this.page.waitForTimeout(500);
+            attempCount++;           
+            await this.doneButton.click();
+        }
     }
 
     async createVideoContent(title, caption, productName) {
