@@ -37,12 +37,13 @@ class ContentPage extends BasePage {
         this.copyAllButton = page.getByRole('button', { name: 'Copy all' });
         this.cancelButton = page.getByRole('button', { name: 'Cancel' });
         this.saveButton = page.getByRole('button', { name: 'Save' });
-        
+        this.copyLinkToastMessage = page.locator('div').filter({ hasText: /^Product Link Copied!$/ }).nth(1);
+
         // Match products table
         this.searchMatchProductField = page.getByRole('textbox', { name: 'Search' })
         this.matchProductCloseButton = page.getByRole('banner').getByRole('button');
-    
-        // Share content modla
+
+        // Share content modal
         this.shareContentHeader = page.locator('div').filter({ hasText: /^Share content$/ });
         this.shareContentModal = page.locator('div').filter({ hasText: /^InstagramTwitterLinkedInThreadsPinterestFacebook$/ }).first();
         this.instagramMenu = page.locator('a').filter({ hasText: 'Instagram' });
@@ -50,7 +51,7 @@ class ContentPage extends BasePage {
         this.linkedinMenu = page.locator('a').filter({ hasText: 'LinkedIn' });
         this.threadsMenu = page.locator('a').filter({ hasText: 'Threads' });
         this.pinterestMenu = page.locator('a').filter({ hasText: 'Pinterest' });
-        this.facebookMenu = page.locator('a').filter({ hasText: 'Facebook' });  
+        this.facebookMenu = page.locator('a').filter({ hasText: 'Facebook' });
     }
 
     async navigateToContentPage() {
@@ -75,7 +76,7 @@ class ContentPage extends BasePage {
 
     async getProductCountInContentDetailsPage() {
         // Dynamic xpath was used to avoid strict mode violation error
-        const contentProductDetailsCount = await this.page.locator('//p[text()="Products"]//preceding-sibling::p').innerText();;
+        const contentProductDetailsCount = await this.page.locator('//p[text()="Products"]//preceding-sibling::p').innerText();
         return contentProductDetailsCount;
     }
 
@@ -96,7 +97,7 @@ class ContentPage extends BasePage {
         await addProductButton.click();
         await this.clearSearchMatchProductsField();
     }
-    
+
     async removeProduct(productName) {
         await this.searchDataFromMatchProductsTable(productName);
         const removeProductButton = this.page.getByRole('row', { name: `${productName}` }).getByTestId('RemoveIcon');
@@ -111,6 +112,23 @@ class ContentPage extends BasePage {
 
     async clearSearchMatchProductsField() {
         await this.searchMatchProductField.clear();
+    }
+
+    async clickCopyLinkButton(productName) {
+        const productCopyLinkButton = this.page.getByRole('row', { name: productName }).getByRole('button').nth(1)
+        await productCopyLinkButton.click();
+    }
+
+    async pasteCopyLinkValue() {
+        await this.page.keyboard.down('Control');
+        await this.page.keyboard.press('V');
+        await this.page.keyboard.up('Control');
+    }
+
+    async getCaptionFieldText() {
+        const captionFieldText = await this.captionField.textContent();
+        console.log('captionFieldText: ', captionFieldText);
+        return captionFieldText;
     }
 
 }

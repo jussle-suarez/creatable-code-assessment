@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 const ContentPage = require('./../pages/content.page.js');
 
-let contentPage, countFromContentPage, countFromContentDetailsPage, productCountContentPage;
+let contentPage, countFromContentPage, countFromContentDetailsPage, productCountContentPage, captionFieldValue;
 
 test.beforeEach(async ({ page }) => {
     contentPage = new ContentPage(page);
@@ -120,6 +120,23 @@ test('[TC7] Verify Share button works as expected.', async ({ page }) => {
         await expect(contentPage.threadsMenu).toBeVisible();
         await expect(contentPage.pinterestMenu).toBeVisible();
         await expect(contentPage.facebookMenu).toBeVisible();
+    });
+});
+
+test('[TC8] Verify Copy link button works as expected.', async ({ page }) => {
+    await test.step('Verify toast message will show on click of copy link button', async () => {
+        await contentPage.productImage.click();
+        await contentPage.clickCopyLinkButton('Schluter Designbase-SL In Corner 6 3/8in. Stainless Steel');
+        await expect(contentPage.copyLinkToastMessage).toBeVisible();
+    });
+    await test.step('Verify link contains https://c-linx.com/', async () => {
+        await contentPage.captionField.click();
+        await contentPage.captionField.clear();
+        await contentPage.pasteCopyLinkValue();
+        captionFieldValue = await contentPage.getCaptionFieldText();
+        console.log('captionFieldValue: ', captionFieldValue);
+        await expect(captionFieldValue).toContain('https://c-linx.com/');
+        await page.pause();
     });
 });
 
