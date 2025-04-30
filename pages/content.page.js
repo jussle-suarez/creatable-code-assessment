@@ -118,6 +118,7 @@ class ContentPage extends BasePage {
     async addProductForVideoContent() {
         const productRow = await this.page.getByRole('cell', { name: 'Schluter Kerdi-Drain 4in. Grate Bronze Curve' });
         const productRow2 = await this.page.getByRole('cell', { name: 'Schluter Designbase-SL In' });
+        await this.searchMatchProductField.click();
         await productRow.click();
         await productRow2.click();
         await this.page.waitForLoadState('networkidle');
