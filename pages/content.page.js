@@ -34,11 +34,7 @@ class ContentPage extends BasePage {
         this.noContentText = page.getByText('You have no content to display.');
         this.noContentImage = page.getByTestId('PhotoLibraryIcon');
 
-        // Campaign moderation workflow content
-        this.content1Status = page.getByTestId('content-239485273').getByText('Published');
-        this.content1CreatedDate = page.getByTestId('content-239485273').getByText('04/26/');
-
-        // Campaign moderation workflow content details
+        // Workflow content details
         this.contentDetailsPublishedStatus = page.locator('#content-details-dialog').getByText('Published');
         this.contentDetailsPendingStatus = page.locator('#content-details-dialog').getByText('Pending');
         this.contentDetailsDraftStatus = page.locator('#content-details-dialog').getByText('Draft');
@@ -229,7 +225,6 @@ class ContentPage extends BasePage {
             await this.yesButton.click();
         }
     }
-
 }
 
 module.exports = ContentPage;
