@@ -43,7 +43,7 @@ test('TC_002 - Verify user is able to create photo content', async ({ page }) =>
     });
 });
 
-test('TC_003 - Verify user is able to create video content', async ({ page }) => {
+test.only('TC_003 - Verify user is able to create video content', async ({ page }) => {
     await test.step('Video Content Clean Up', async () => {
         await contentPage.videoContentCleanUp();
     });  
@@ -58,6 +58,7 @@ test('TC_003 - Verify user is able to create video content', async ({ page }) =>
         await contentPage.createVideoContent('Video Content '
             , 'This is a description of video content related to '
             , 'Schluter Kerdi-Drain 4in. Grate Matte White Pure'
+            , 'Schluter Shelf Triangular Corner Floral Bronze'
         );
     });
     await test.step('Verify Created video content is displayed in Content page', async () => {
@@ -143,7 +144,7 @@ test('TC_006 - Verify Product count from Content page and Content details are eq
     });
 });
 
-test('TC_007 - Verify Content Title is updated after updating via Content Details page', async ({ page }) => {
+test.only('TC_007 - Verify Content Title is updated after updating via Content Details page', async ({ page }) => {
     await test.step('Photo Content Clean Up', async () => {
         await contentPage.photoContentCleanUpByName('Photo Content ' + testId + ' v2');
     });
@@ -159,6 +160,12 @@ test('TC_007 - Verify Content Title is updated after updating via Content Detail
             , 'This is a description of photo content related to '
             , 'Schluter Kerdi-Drain 4in. Grate Matte White Pure'
             , 'useSelectedProductPhoto');
+    });
+    await test.step('Verify Created photo content is displayed in Content page', async () => {
+        await contentPage.clearSearchField();
+        await contentPage.searchData('Photo Content ' + testId);
+        const contentTitle = await contentPage.getContentTitle('Photo Content ' + testId);
+        await expect(contentTitle).toBe('Photo Content ' + testId);
     });
     await test.step('Update content title', async () => {
         await contentPage.clearSearchField();
@@ -185,14 +192,22 @@ test('TC_007 - Verify Content Title is updated after updating via Content Detail
     });
 });
 
-test('TC_008 - Verify Content Product counts is updated after adding more product.', async ({ page }) => {
+test.only('TC_008 - Verify Content Product counts is updated after adding more product.', async ({ page }) => {
     await test.step('Create Photo Content', async ({ page }) => {
         await contentPage.createPhotoContent('Photo Content '
             , 'This is a description of photo content related to '
             , 'Schluter Kerdi-Drain 4in. Grate Matte White Pure'
             , 'useSelectedProductPhoto');
     });
+    await test.step('Verify Created photo content is displayed in Content page', async () => {
+        await contentPage.clearSearchField();
+        await contentPage.searchData('Photo Content ' + testId);
+        const contentTitle = await contentPage.getContentTitle('Photo Content ' + testId);
+        await expect(contentTitle).toBe('Photo Content ' + testId);
+    });
     await test.step('Add more product', async () => {
+        await contentPage.clearSearchField();
+        await contentPage.searchData('Photo Content ' + testId);
         await contentPage.clickContentTitleBasedOnContentName('Photo Content ' + testId);
         countFromContentDetailsPage = await contentPage.getProductCountInContentDetailsPage();
         await contentPage.matchButton.click();

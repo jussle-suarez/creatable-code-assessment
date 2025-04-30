@@ -175,7 +175,7 @@ class ContentPage extends BasePage {
         }
     }
 
-    async createVideoContent(title, caption, productName) {
+    async createVideoContent(title, caption, productName, productName2) {
         await this.createButton.hover();
         await this.createVideoContentButton.click();
         await this.uploadVideo();
@@ -185,7 +185,7 @@ class ContentPage extends BasePage {
         await this.captionField.pressSequentially(caption + this.testId, { delay: 50 });
         await this.nextButton.click();
         await this.addProduct(productName);
-        await this.page.waitForTimeout(5000);
+        await this.addProduct(productName2);
         await this.page.waitForLoadState('networkidle');
         await this.doneButton.click();
     }
