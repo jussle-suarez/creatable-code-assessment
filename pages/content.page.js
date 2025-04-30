@@ -128,6 +128,7 @@ class ContentPage extends BasePage {
     async searchDataFromMatchProductsTable(searchKey) {
         await this.searchMatchProductField.click();
         await this.searchMatchProductField.pressSequentially(searchKey, { delay: 50 });
+        await this.waitForLoadState('networkidle');
     }
 
     async clearSearchMatchProductsField() {
@@ -168,9 +169,7 @@ class ContentPage extends BasePage {
         if (uploadType === 'useSelectedProductPhoto') {
             await this.clickProductPhoto(productName);
         }
-        await this.previousButton.click();
-        await this.searchDataFromMatchProductsTable(productName + title + caption + uploadType);
-        await this.nextButton.click();
+        await this.page.waitForTimeout(15000);
         await this.doneButton.click();
     }
 
@@ -184,12 +183,12 @@ class ContentPage extends BasePage {
         await this.captionField.pressSequentially(caption + this.testId, { delay: 50 });
         await this.nextButton.click();
         await this.addProduct(productName);
+        await this.page.waitForTimeout(5000);
         await this.doneButton.click();
     }
 
     async uploadVideo() {
         const filePath = "../test-data/dummy_video.mp4";
-        // await this.selectVideoButton.click();
         await this.selectVideoInput.setInputFiles(path.join(__dirname, filePath));
     }
 
