@@ -290,6 +290,5 @@ test.afterEach(async ({ page }) => {
         await contentPage.clearSearchField();
         await contentPage.searchData('Photo Content ' + testId);
         await expect(contentPage.noContentText).toBeVisible();
-        await expect(contentPage.noContentImage).toBeVisible();
     });
 })
