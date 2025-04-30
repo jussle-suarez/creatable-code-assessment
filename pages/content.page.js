@@ -38,6 +38,7 @@ class ContentPage extends BasePage {
         this.cancelButton = page.getByRole('button', { name: 'Cancel' });
         this.saveButton = page.getByRole('button', { name: 'Save' });
         this.copyLinkToastMessage = page.locator('div').filter({ hasText: /^Product Link Copied!$/ }).nth(1);
+        this.copyLinksToastMessage = page.locator('div').filter({ hasText: /^Product Links Copied$/ }).nth(1);
 
         // Match products table
         this.searchMatchProductField = page.getByRole('textbox', { name: 'Search' })

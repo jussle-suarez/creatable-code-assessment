@@ -134,7 +134,23 @@ test('[TC8] Verify Copy link button works as expected.', async ({ page }) => {
         await contentPage.captionField.clear();
         await contentPage.pasteCopyLinkValue();
         captionFieldValue = await contentPage.getCaptionFieldText();
-        console.log('captionFieldValue: ', captionFieldValue);
+        await expect(captionFieldValue).toContain('https://c-linx.com/');
+        await page.pause();
+    });
+});
+
+test('[TC9] Verify Copy All link button works as expected.', async ({ page }) => {
+    await test.step('Verify toast message will show on click of copy link button', async () => {
+        await contentPage.productImage.click();
+        await contentPage.copyAllButton.click();
+        await page.pause();
+        await expect(contentPage.copyLinksToastMessage).toBeVisible();
+    });
+    await test.step('Verify link contains https://c-linx.com/', async () => {
+        await contentPage.captionField.click();
+        await contentPage.captionField.clear();
+        await contentPage.pasteCopyLinkValue();
+        captionFieldValue = await contentPage.getCaptionFieldText();
         await expect(captionFieldValue).toContain('https://c-linx.com/');
         await page.pause();
     });
