@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 const ContentPage = require('./../pages/content.page.js');
 
-let contentPage;
+let contentPage, countFromContentPage, countFromContentDetailsPage, productCountContentPage;
 
 test.beforeEach(async ({ page }) => {
     contentPage = new ContentPage(page);
@@ -56,11 +56,11 @@ test('[TC3] Verify Key Elements of content details are displayed', async ({ page
 
 test('[TC4] Verify Product count from Content page and Content details are equal.', async ({ page }) => {
     // Pass product count displayed in Content page 
-    const productCountContentPage = page.getByTestId('content-239485319').getByRole('button');
-    const countFromContentPage = await contentPage.getProductCountInContentPage(productCountContentPage);
+    productCountContentPage = page.getByTestId('content-239485319').getByRole('button');
+    countFromContentPage = await contentPage.getProductCountInContentPage(productCountContentPage);
 
     await contentPage.productImage.click();
-    const countFromContentDetailsPage = await contentPage.getProductCountInContentDetailsPage();
+    countFromContentDetailsPage = await contentPage.getProductCountInContentDetailsPage();
 
     await test.step('Compare count from content page is equal to content details page', async () => {
         await expect(countFromContentPage).toBe(countFromContentDetailsPage);
@@ -82,6 +82,24 @@ test('[TC5] Verify Content Title is updated after updating via Content Details p
     });
 });
 
+test('[TC6] Verify Content Product counts is updated after adding more product.', async ({ page }) => {
+    await contentPage.productImage.click();
+    await test.step('Add more product', async () => {
+        countFromContentDetailsPage = await contentPage.getProductCountInContentDetailsPage();
+        await contentPage.matchButton.click();
+        await contentPage.addProduct('Schluter Kerdi-Drain 4in. Grate Matte White Pure');
+        await contentPage.addProduct('Schluter Shelf Triangular Corner Floral Bronze')
+        countFromContentDetailsPage = Number(countFromContentDetailsPage) + 2;
+    });
+    await test.step('Verify Content Product count is updated', async () => {
+        await page.goto('/');
+        await contentPage.navigateToContentPage();
+        productCountContentPage = page.getByTestId('content-239485319').getByRole('button');
+        countFromContentPage = await contentPage.getProductCountInContentPage(productCountContentPage);
+        await expect(countFromContentDetailsPage).toBe(Number(countFromContentPage));
+    });
+});
+
 test.afterEach(async ({ page }) => {
     await page.goto('/');
     await contentPage.navigateToContentPage();
@@ -97,5 +115,14 @@ test.afterEach(async ({ page }) => {
         const title = page.getByTestId('content-239485319');
         const contentTitle = await contentPage.getContentTitle(title);
         await expect(contentTitle).toBe('Product image');
+    });
+    await test.step('Revert Product Image Count', async () => {
+        await page.goto('/');
+        await contentPage.navigateToContentPage();
+        await page.pause();
+        await contentPage.productImage.click();
+        await contentPage.matchButton.click();
+        await contentPage.removeProduct('Schluter Kerdi-Drain 4in. Grate Matte White Pure');
+        await contentPage.removeProduct('Schluter Shelf Triangular Corner Floral Bronze')
     });
 })

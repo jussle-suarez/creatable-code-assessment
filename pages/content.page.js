@@ -37,6 +37,10 @@ class ContentPage extends BasePage {
         this.copyAllButton = page.getByRole('button', { name: 'Copy all' });
         this.cancelButton = page.getByRole('button', { name: 'Cancel' });
         this.saveButton = page.getByRole('button', { name: 'Save' });
+        
+        // Match products table
+        this.searchMatchProductField = page.getByRole('textbox', { name: 'Search' })
+        this.matchProductCloseButton = page.getByRole('banner').getByRole('button');
     }
 
     async navigateToContentPage() {
@@ -75,6 +79,30 @@ class ContentPage extends BasePage {
         const contentTitle = await locator.locator('//div[@class="LinesEllipsis  "]');
         await contentTitle.click();
     }
+
+    async addProduct(productName) {
+        await this.searchDataFromMatchProductsTable(productName);
+        const addProductButton = this.page.getByRole('row', { name: `${productName}` }).getByTestId('AddIcon');
+        await addProductButton.click();
+        await this.clearSearchMatchProductsField();
+    }
+    
+    async removeProduct(productName) {
+        await this.searchDataFromMatchProductsTable(productName);
+        const removeProductButton = this.page.getByRole('row', { name: `${productName}` }).getByTestId('RemoveIcon');
+        await removeProductButton.click();
+        await this.clearSearchMatchProductsField();
+    }
+
+    async searchDataFromMatchProductsTable(searchKey) {
+        await this.searchMatchProductField.click();
+        await this.searchMatchProductField.pressSequentially(searchKey, { delay: 50 });
+    }
+
+    async clearSearchMatchProductsField() {
+        await this.searchMatchProductField.clear();
+    }
+
 }
 
 module.exports = ContentPage;
