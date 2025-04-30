@@ -196,7 +196,7 @@ class ContentPage extends BasePage {
         await this.titleField.pressSequentially(title + this.testId, { delay: 50 });
         await this.captionField.click();
         await this.captionField.pressSequentially(caption + this.testId, { delay: 50 });
-        await this.nextButton.click();\
+        await this.nextButton.click();
         await this.addProductForVideoContent();
         await this.doneButton.click();
     }
