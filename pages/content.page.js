@@ -24,12 +24,10 @@ class ContentPage extends BasePage {
 
         // Campaign moderation workflow content
         this.content1Status = page.getByTestId('content-239485273').getByText('Published');
-        this.content1ProductCount = page.getByTestId('content-239485273').getByRole('button', { name: '3' });
         this.content1CreatedDate = page.getByTestId('content-239485273').getByText('04/26/');
 
         // Campaign moderation workflow content details
         this.contentDetailsStatus = page.locator('#content-details-dialog').getByText('Published');
-        this.contentDetailsProductCount = page.locator('#content-details-dialog').getByText('3', { exact: true });
         this.deleteButton = page.getByRole('button', { name: 'Delete' });
         this.submitForReviewButton = page.getByRole('button', { name: 'Submit for review' });
         this.shareButton = page.getByRole('button', { name: 'Share' });
@@ -54,6 +52,28 @@ class ContentPage extends BasePage {
 
     async clearSearchField() {
         await this.searchField.clear();
+    }
+
+    async getProductCountInContentPage(locator) {
+        const contentProductCount = await locator.innerText();
+        return contentProductCount;
+    }
+
+    async getProductCountInContentDetailsPage() {
+        // Dynamic xpath was used to avoid strict mode violation error
+        const contentProductDetailsCount = await this.page.locator('//p[text()="Products"]//preceding-sibling::p').innerText();;
+        return contentProductDetailsCount;
+    }
+
+    async getContentTitle(locator) {
+        await this.page.waitForLoadState('networkidle');
+        const contentTitle = await locator.locator('//div[@class="LinesEllipsis  "]').innerText();
+        return contentTitle;
+    }
+
+    async clickContentTitleBasedOnTestId(locator) {
+        const contentTitle = await locator.locator('//div[@class="LinesEllipsis  "]');
+        await contentTitle.click();
     }
 }
 
