@@ -144,7 +144,7 @@ test('TC_006 - Verify Product count from Content page and Content details are eq
     });
 });
 
-test.only('TC_007 - Verify Content Title is updated after updating via Content Details page', async ({ page }) => {
+test('TC_007 - Verify Content Title is updated after updating via Content Details page', async ({ page }) => {
     await test.step('Photo Content Clean Up', async () => {
         await contentPage.photoContentCleanUpByName('Photo Content ' + testId + ' v2');
     });
@@ -192,7 +192,7 @@ test.only('TC_007 - Verify Content Title is updated after updating via Content D
     });
 });
 
-test.only('TC_008 - Verify Content Product counts is updated after adding more product.', async ({ page }) => {
+test('TC_008 - Verify Content Product counts is updated after adding more product.', async ({ page }) => {
     await test.step('Create Photo Content', async ({ page }) => {
         await contentPage.createPhotoContent('Photo Content '
             , 'This is a description of photo content related to '

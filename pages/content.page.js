@@ -110,9 +110,16 @@ class ContentPage extends BasePage {
     async addProduct(productName) {
         await this.searchDataFromMatchProductsTable(productName);
         const addProductButton = this.page.getByRole('row', { name: `${productName}` }).getByTestId('AddIcon');
-        // await this.page.waitForLoadState('networkidle');
-        await this.page.waitForTimeout(5000);
+        await this.page.waitForLoadState('networkidle');
         await addProductButton.click();
+        await this.clearSearchMatchProductsField();
+    }
+
+    async addProductForVideoContent(productName) {
+        await this.searchDataFromMatchProductsTable(productName);
+        const productRowButton = this.page.getByRole('row', { name: `${productName}` });
+        await this.page.waitForLoadState('networkidle');
+        await productRowButton.click();
         await this.clearSearchMatchProductsField();
     }
 
@@ -185,8 +192,8 @@ class ContentPage extends BasePage {
         await this.captionField.click();
         await this.captionField.pressSequentially(caption + this.testId, { delay: 50 });
         await this.nextButton.click();
-        await this.addProduct(productName);
-        await this.addProduct(productName2);
+        await this.addProductForVideoContent(productName);
+        await this.addProductForVideoContent(productName2);
         await this.page.waitForLoadState('networkidle');
         await this.doneButton.click();
     }
