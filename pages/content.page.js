@@ -110,7 +110,8 @@ class ContentPage extends BasePage {
     async addProduct(productName) {
         await this.searchDataFromMatchProductsTable(productName);
         const addProductButton = this.page.getByRole('row', { name: `${productName}` }).getByTestId('AddIcon');
-        await this.page.waitForLoadState('networkidle');
+        // await this.page.waitForLoadState('networkidle');
+        await this.page.waitForTimeout(5000);
         await addProductButton.click();
         await this.clearSearchMatchProductsField();
     }
