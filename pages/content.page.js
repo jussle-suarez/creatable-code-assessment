@@ -1,3 +1,4 @@
+const path = require('path')
 const BasePage = require('./base.page.js');
 
 class ContentPage extends BasePage {
@@ -17,6 +18,8 @@ class ContentPage extends BasePage {
         this.createButton = page.getByRole('button', { name: 'Content creation' });
         this.createPhotoContentButton = page.getByRole('menuitem', { name: 'Photo' });
         this.createVideoContentButton = page.getByRole('menuitem', { name: 'Video' });
+        this.selectVideoButton = page.getByText('Select a video...');
+        this.selectVideoInput = page.locator('//input[@accept]');
         this.nextButton = page.getByRole('button', { name: 'Next' });
         this.previousButton = page.locator('#photo-prev-step');
         this.processingSpinner = page.getByText('Processing...');
@@ -171,6 +174,25 @@ class ContentPage extends BasePage {
         await this.doneButton.click();
     }
 
+    async createVideoContent(title, caption, productName) {
+        await this.createButton.hover();
+        await this.createVideoContentButton.click();
+        await this.uploadVideo();
+        await this.titleField.click();
+        await this.titleField.pressSequentially(title + this.testId, { delay: 50 });
+        await this.captionField.click();
+        await this.captionField.pressSequentially(caption + this.testId, { delay: 50 });
+        await this.nextButton.click();
+        await this.addProduct(productName);
+        await this.doneButton.click();
+    }
+
+    async uploadVideo() {
+        const filePath = "../test-data/dummy_video.mp4";
+        // await this.selectVideoButton.click();
+        await this.selectVideoInput.setInputFiles(path.join(__dirname, filePath));
+    }
+
     async photoContentCleanUp() {
         await this.page.goto('/');
         await this.navigateToContentPage();
@@ -178,6 +200,18 @@ class ContentPage extends BasePage {
         let isContentTitleDisplayed = await this.page.locator(`//div[contains(@data-testid,"content")]//div[text()="Photo Content ${this.testId}"]`).isVisible();
         if (isContentTitleDisplayed) {
             await this.clickContentTitleBasedOnContentName('Photo Content ' + this.testId);
+            await this.deleteButton.click();
+            await this.yesButton.click();
+        }
+    }
+
+    async videoContentCleanUp() {
+        await this.page.goto('/');
+        await this.navigateToContentPage();
+        await this.searchData('Video Content ' + this.testId);
+        let isContentTitleDisplayed = await this.page.locator(`//div[contains(@data-testid,"content")]//div[text()="Video Content ${this.testId}"]`).isVisible();
+        if (isContentTitleDisplayed) {
+            await this.clickContentTitleBasedOnContentName('Video Content ' + this.testId);
             await this.deleteButton.click();
             await this.yesButton.click();
         }

@@ -9,11 +9,16 @@ test.beforeEach(async ({ page }, testInfo) => {
     await page.goto('/');
     await contentPage.login();
     await contentPage.navigateToContentPage();
-    await test.step('Photo Content Clean Up', async ({ page }) => {
+    await test.step('Photo Content Clean Up', async () => {
         await contentPage.photoContentCleanUp();
         await expect(contentPage.noContentText).toBeVisible();
         await expect(contentPage.noContentImage).toBeVisible();
-    })
+    });
+    await test.step('Video Content Clean Up', async () => {
+        await contentPage.videoContentCleanUp();
+        await expect(contentPage.noContentText).toBeVisible();
+        await expect(contentPage.noContentImage).toBeVisible();
+    });
 })
 
 test('TC_001 - Verify key elements in Content page are visible', async ({ page }) => {
@@ -23,7 +28,37 @@ test('TC_001 - Verify key elements in Content page are visible', async ({ page }
     await expect(contentPage.createButton).toBeVisible();
 });
 
-test('TC_002 - Verify Search feature works as expected', async ({ page }) => {
+test('TC_002 - Verify user is able to create photo content', async ({ page }) => {
+    await test.step('Create Photo Content', async ({ page }) => {
+        await contentPage.createPhotoContent('Photo Content '
+            , 'This is a description of photo content related to '
+            , 'Schluter Kerdi-Drain 4in. Grate Matte White Pure'
+            , 'useSelectedProductPhoto');
+    });
+    await test.step('Verify Created photo content is displayed in Content page', async () => {
+        await contentPage.clearSearchField();
+        await contentPage.searchData('Photo Content ' + testId);
+        const contentTitle = await contentPage.getContentTitle('Photo Content ' + testId);
+        await expect(contentTitle).toBe('Photo Content ' + testId);
+    });
+});
+
+test('TC_003 - Verify user is able to create video content', async ({ page }) => {
+    await test.step('Create Video Content', async ({ page }) => {
+        await contentPage.createVideoContent('Video Content '
+            , 'This is a description of photo content related to '
+            , 'Schluter Kerdi-Drain 4in. Grate Matte White Pure'
+        );
+    });
+    await test.step('Verify Created video content is displayed in Content page', async () => {
+        await contentPage.clearSearchField();
+        await contentPage.searchData('Video Content ' + testId);
+        const contentTitle = await contentPage.getContentTitle('Video Content ' + testId);
+        await expect(contentTitle).toBe('Video Content ' + testId);
+    });
+});
+
+test('TC_004 - Verify Search feature works as expected', async ({ page }) => {
     await test.step('Create Photo Content', async ({ page }) => {
         await contentPage.createPhotoContent('Photo Content '
             , 'This is a description of photo content related to '
@@ -43,7 +78,7 @@ test('TC_002 - Verify Search feature works as expected', async ({ page }) => {
     });
 });
 
-test('TC_003 - Verify Key Elements of content details are displayed', async ({ page }) => {
+test('TC_005 - Verify Key Elements of content details are displayed', async ({ page }) => {
     await test.step('Create Photo Content', async ({ page }) => {
         await contentPage.createPhotoContent('Photo Content '
             , 'This is a description of photo content related to '
@@ -66,7 +101,7 @@ test('TC_003 - Verify Key Elements of content details are displayed', async ({ p
     });
 });
 
-test('TC_004 - Verify Product count from Content page and Content details are equal.', async ({ page }) => {
+test('TC_006 - Verify Product count from Content page and Content details are equal.', async ({ page }) => {
     await test.step('Create Photo Content', async ({ page }) => {
         await contentPage.createPhotoContent('Photo Content '
             , 'This is a description of photo content related to '
@@ -86,7 +121,7 @@ test('TC_004 - Verify Product count from Content page and Content details are eq
     });
 });
 
-test('TC_005 - Verify Content Title is updated after updating via Content Details page', async ({ page }) => {
+test('TC_007 - Verify Content Title is updated after updating via Content Details page', async ({ page }) => {
     await test.step('Create Photo Content', async ({ page }) => {
         await contentPage.createPhotoContent('Photo Content '
             , 'This is a description of photo content related to '
@@ -106,7 +141,7 @@ test('TC_005 - Verify Content Title is updated after updating via Content Detail
     });
 });
 
-test('TC_006 - Verify Content Product counts is updated after adding more product.', async ({ page }) => {
+test('TC_008 - Verify Content Product counts is updated after adding more product.', async ({ page }) => {
     await test.step('Create Photo Content', async ({ page }) => {
         await contentPage.createPhotoContent('Photo Content '
             , 'This is a description of photo content related to '
@@ -129,7 +164,7 @@ test('TC_006 - Verify Content Product counts is updated after adding more produc
     });
 });
 
-test('TC_007 - Verify Share button works as expected.', async ({ page }) => {
+test('TC_009 - Verify Share button works as expected.', async ({ page }) => {
     await contentPage.productImage.click();
     await contentPage.shareButton.click();
     await test.step('Verify Share Content modal shows on click of Share button', async () => {
@@ -144,7 +179,7 @@ test('TC_007 - Verify Share button works as expected.', async ({ page }) => {
     });
 });
 
-test('TC_008 - Verify Copy link button works as expected.', async ({ page }) => {
+test('TC_010 - Verify Copy link button works as expected.', async ({ page }) => {
     await test.step('Create Photo Content', async ({ page }) => {
         await contentPage.createPhotoContent('Photo Content '
             , 'This is a description of photo content related to '
@@ -165,7 +200,7 @@ test('TC_008 - Verify Copy link button works as expected.', async ({ page }) => 
     });
 });
 
-test('TC_009 - Verify Copy All link button works as expected.', async ({ page }) => {
+test('TC_011 - Verify Copy All link button works as expected.', async ({ page }) => {
     await test.step('Create Photo Content', async ({ page }) => {
         await contentPage.createPhotoContent('Photo Content '
             , 'This is a description of photo content related to '
@@ -187,7 +222,14 @@ test('TC_009 - Verify Copy All link button works as expected.', async ({ page })
 });
 
 test.afterEach(async ({ page }) => {
-    await contentPage.photoContentCleanUp();
-    await expect(contentPage.noContentText).toBeVisible();
-    await expect(contentPage.noContentImage).toBeVisible();
+    await test.step('Photo Content Clean Up', async () => {
+        await contentPage.photoContentCleanUp();
+        await expect(contentPage.noContentText).toBeVisible();
+        await expect(contentPage.noContentImage).toBeVisible();
+    });
+    await test.step('Video Content Clean Up', async () => {
+        await contentPage.videoContentCleanUp();
+        await expect(contentPage.noContentText).toBeVisible();
+        await expect(contentPage.noContentImage).toBeVisible();
+    });
 })
