@@ -50,8 +50,7 @@ class ContentPage extends BasePage {
         this.linkedinMenu = page.locator('a').filter({ hasText: 'LinkedIn' });
         this.threadsMenu = page.locator('a').filter({ hasText: 'Threads' });
         this.pinterestMenu = page.locator('a').filter({ hasText: 'Pinterest' });
-        this.facebookMenu = page.locator('a').filter({ hasText: 'Facebook' });
-        
+        this.facebookMenu = page.locator('a').filter({ hasText: 'Facebook' });  
     }
 
     async navigateToContentPage() {
