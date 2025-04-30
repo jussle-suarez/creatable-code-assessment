@@ -1,8 +1,9 @@
 const BasePage = require('./base.page.js');
 
 class ContentPage extends BasePage {
-    constructor(page) {
+    constructor(page, testId) {
         super(page);
+        this.testId = testId;
 
         this.menu = page.getByRole('button', { name: 'menu' });
         this.contentMenuItem = page.getByRole('link', { name: 'Content' });
@@ -13,6 +14,14 @@ class ContentPage extends BasePage {
         this.searchFieldClearButton = page.getByTestId('CloseIcon');
 
         // Content table
+        this.createButton = page.getByRole('button', { name: 'Content creation' });
+        this.createPhotoContentButton = page.getByRole('menuitem', { name: 'Photo' });
+        this.createVideoContentButton = page.getByRole('menuitem', { name: 'Video' });
+        this.nextButton = page.getByRole('button', { name: 'Next' });
+        this.previousButton = page.locator('#photo-prev-step');
+        this.processingSpinner = page.getByText('Processing...');
+        this.doneButton = page.getByRole('button', { name: 'Done' });
+
         this.campaignModerationWorkflow = page.getByTestId('content-239485273').getByText('Campaign moderation workflow');
         this.creatorSearchAndBook = page.getByTestId('content-239485300').getByText('Creator search and book');
         this.imageAsset = page.getByTestId('content-239485309').getByText('Image asset');
@@ -27,7 +36,9 @@ class ContentPage extends BasePage {
         this.content1CreatedDate = page.getByTestId('content-239485273').getByText('04/26/');
 
         // Campaign moderation workflow content details
-        this.contentDetailsStatus = page.locator('#content-details-dialog').getByText('Published');
+        this.contentDetailsPublishedStatus = page.locator('#content-details-dialog').getByText('Published');
+        this.contentDetailsPendingStatus = page.locator('#content-details-dialog').getByText('Pending');
+        this.contentDetailsDraftStatus = page.locator('#content-details-dialog').getByText('Draft');
         this.deleteButton = page.getByRole('button', { name: 'Delete' });
         this.submitForReviewButton = page.getByRole('button', { name: 'Submit for review' });
         this.shareButton = page.getByRole('button', { name: 'Share' });
@@ -53,6 +64,10 @@ class ContentPage extends BasePage {
         this.threadsMenu = page.locator('a').filter({ hasText: 'Threads' });
         this.pinterestMenu = page.locator('a').filter({ hasText: 'Pinterest' });
         this.facebookMenu = page.locator('a').filter({ hasText: 'Facebook' });
+
+        // Delete photo modal
+        this.noButton = page.getByRole('button', { name: 'No' });
+        this.yesButton = page.getByRole('button', { name: 'Yes' });
     }
 
     async navigateToContentPage() {
@@ -63,15 +78,15 @@ class ContentPage extends BasePage {
 
     async searchData(searchKey) {
         await this.searchField.click();
-        await this.searchField.pressSequentially(searchKey, { delay: 100 });
+        await this.searchField.pressSequentially(searchKey, { delay: 50 });
     }
 
     async clearSearchField() {
         await this.searchField.clear();
     }
 
-    async getProductCountInContentPage(locator) {
-        const contentProductCount = await locator.innerText();
+    async getProductCountInContentPage(productName) {
+        const contentProductCount = await this.page.locator('//div[contains(@data-testid,"content")]').filter({ hasText: productName }).getByRole('button').innerText();
         return contentProductCount;
     }
 
@@ -81,14 +96,15 @@ class ContentPage extends BasePage {
         return contentProductDetailsCount;
     }
 
-    async getContentTitle(locator) {
+    async getContentTitle(productName) {
         await this.page.waitForLoadState('networkidle');
-        const contentTitle = await locator.locator('//div[@class="LinesEllipsis  "]').innerText();
+        const contentTitle = await this.page.locator(`//div[contains(@data-testid,"content")]//div[text()="${productName}"]`).innerText();
         return contentTitle;
     }
 
-    async clickContentTitleBasedOnTestId(locator) {
-        const contentTitle = await locator.locator('//div[@class="LinesEllipsis  "]');
+    async clickContentTitleBasedOnContentName(productName) {
+        await this.page.waitForLoadState('networkidle');
+        const contentTitle = await this.page.locator(`//div[contains(@data-testid,"content")]//div[text()="${productName}"]`);
         await contentTitle.click();
     }
 
@@ -128,8 +144,43 @@ class ContentPage extends BasePage {
 
     async getCaptionFieldText() {
         const captionFieldText = await this.captionField.textContent();
-        console.log('captionFieldText: ', captionFieldText);
         return captionFieldText;
+    }
+
+    async clickProductPhoto(productName) {
+        const productPhoto = this.page.locator('#photo-wizard').getByText(productName);
+        await productPhoto.click();
+    }
+
+    async createPhotoContent(title, caption, productName, uploadType) {
+        await this.createButton.hover();
+        await this.createPhotoContentButton.click();
+        await this.titleField.click();
+        await this.titleField.fill(title + this.testId);
+        await this.captionField.click();
+        await this.captionField.fill(caption + this.testId);
+        await this.nextButton.click();
+        await this.addProduct(productName);
+        await this.nextButton.click();
+        if (uploadType === 'useSelectedProductPhoto') {
+            await this.clickProductPhoto(productName);
+        }
+        await this.previousButton.click();
+        await this.searchDataFromMatchProductsTable(productName + title + caption + uploadType);
+        await this.nextButton.click();
+        await this.doneButton.click();
+    }
+
+    async photoContentCleanUp() {
+        await this.page.goto('/');
+        await this.navigateToContentPage();
+        await this.searchData('Photo Content ' + this.testId);
+        let isContentTitleDisplayed = await this.page.locator(`//div[contains(@data-testid,"content")]//div[text()="Photo Content ${this.testId}"]`).isVisible();
+        if (isContentTitleDisplayed) {
+            await this.clickContentTitleBasedOnContentName('Photo Content ' + this.testId);
+            await this.deleteButton.click();
+            await this.yesButton.click();
+        }
     }
 
 }
