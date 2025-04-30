@@ -11,11 +11,11 @@ test.beforeEach(async ({ page }, testInfo) => {
     await contentPage.navigateToContentPage();
     await test.step('Photo Content Clean Up', async () => {
         await contentPage.photoContentCleanUp();
-        await expect(contentPage.noContentText).toBeVisible();
-        await expect(contentPage.noContentImage).toBeVisible();
     });
-    await test.step('Video Content Clean Up', async () => {
-        await contentPage.videoContentCleanUp();
+    await test.step('Verify Photo Content is cleaned up', async ({}) => {
+        await contentPage.navigateToContentPage();
+        await contentPage.clearSearchField();
+        await contentPage.searchData('Photo Content ' + testId);
         await expect(contentPage.noContentText).toBeVisible();
         await expect(contentPage.noContentImage).toBeVisible();
     });
@@ -44,9 +44,19 @@ test('TC_002 - Verify user is able to create photo content', async ({ page }) =>
 });
 
 test('TC_003 - Verify user is able to create video content', async ({ page }) => {
+    await test.step('Video Content Clean Up', async () => {
+        await contentPage.videoContentCleanUp();
+    });  
+    await test.step('Verify Photo Content is cleaned up', async ({}) => {
+        await contentPage.navigateToContentPage();
+        await contentPage.clearSearchField();
+        await contentPage.searchData('Video Content ' + testId);
+        await expect(contentPage.noContentText).toBeVisible();
+        await expect(contentPage.noContentImage).toBeVisible();
+    });
     await test.step('Create Video Content', async ({ page }) => {
         await contentPage.createVideoContent('Video Content '
-            , 'This is a description of photo content related to '
+            , 'This is a description of video content related to '
             , 'Schluter Kerdi-Drain 4in. Grate Matte White Pure'
         );
     });
@@ -55,6 +65,17 @@ test('TC_003 - Verify user is able to create video content', async ({ page }) =>
         await contentPage.searchData('Video Content ' + testId);
         const contentTitle = await contentPage.getContentTitle('Video Content ' + testId);
         await expect(contentTitle).toBe('Video Content ' + testId);
+    });
+    await test.step('Video Content Clean Up', async () => {
+        await contentPage.videoContentCleanUp();
+    });
+    
+    await test.step('Verify Photo Content is cleaned up', async ({}) => {
+        await contentPage.navigateToContentPage();
+        await contentPage.clearSearchField();
+        await contentPage.searchData('Video Content ' + testId);
+        await expect(contentPage.noContentText).toBeVisible();
+        await expect(contentPage.noContentImage).toBeVisible();
     });
 });
 
@@ -66,6 +87,7 @@ test('TC_004 - Verify Search feature works as expected', async ({ page }) => {
             , 'useSelectedProductPhoto');
     });
     await test.step('User search for valid data', async () => {
+        await contentPage.clearSearchField();
         await contentPage.searchData('Photo Content ' + testId);
         const contentTitle = await contentPage.getContentTitle('Photo Content ' + testId);
         await expect(contentTitle).toBe('Photo Content ' + testId);
@@ -122,6 +144,16 @@ test('TC_006 - Verify Product count from Content page and Content details are eq
 });
 
 test('TC_007 - Verify Content Title is updated after updating via Content Details page', async ({ page }) => {
+    await test.step('Photo Content Clean Up', async () => {
+        await contentPage.photoContentCleanUpByName('Photo Content ' + testId + ' v2');
+    });
+    await test.step('Verify Photo Content is cleaned up', async ({}) => {
+        await contentPage.navigateToContentPage();
+        await contentPage.clearSearchField();
+        await contentPage.searchData('Photo Content ' + testId + ' v2');
+        await expect(contentPage.noContentText).toBeVisible();
+        await expect(contentPage.noContentImage).toBeVisible();
+    });
     await test.step('Create Photo Content', async ({ page }) => {
         await contentPage.createPhotoContent('Photo Content '
             , 'This is a description of photo content related to '
@@ -129,6 +161,7 @@ test('TC_007 - Verify Content Title is updated after updating via Content Detail
             , 'useSelectedProductPhoto');
     });
     await test.step('Update content title', async () => {
+        await contentPage.clearSearchField();
         await contentPage.clickContentTitleBasedOnContentName('Photo Content ' + testId);
         await contentPage.titleField.clear();
         await contentPage.titleField.fill('Photo Content ' + testId + ' v2');
@@ -138,6 +171,17 @@ test('TC_007 - Verify Content Title is updated after updating via Content Detail
         await contentPage.searchData('Photo Content ' + testId + ' v2');
         const contentTitle = await contentPage.getContentTitle('Photo Content ' + testId + ' v2');
         await expect(contentTitle).toBe('Photo Content ' + testId + ' v2');
+    });
+    await test.step('Photo Content Clean Up', async () => {
+        await contentPage.photoContentCleanUpByName('Photo Content ' + testId + ' v2');
+    });
+    
+    await test.step('Verify Photo Content is cleaned up', async ({}) => {
+        await contentPage.navigateToContentPage();
+        await contentPage.clearSearchField();
+        await contentPage.searchData('Photo Content ' + testId + ' v2');
+        await expect(contentPage.noContentText).toBeVisible();
+        await expect(contentPage.noContentImage).toBeVisible();
     });
 });
 
@@ -165,6 +209,8 @@ test('TC_008 - Verify Content Product counts is updated after adding more produc
 });
 
 test('TC_009 - Verify Share button works as expected.', async ({ page }) => {
+    await page.goto('/');
+    await contentPage.navigateToContentPage();
     await contentPage.productImage.click();
     await contentPage.shareButton.click();
     await test.step('Verify Share Content modal shows on click of Share button', async () => {
@@ -224,11 +270,11 @@ test('TC_011 - Verify Copy All link button works as expected.', async ({ page })
 test.afterEach(async ({ page }) => {
     await test.step('Photo Content Clean Up', async () => {
         await contentPage.photoContentCleanUp();
-        await expect(contentPage.noContentText).toBeVisible();
-        await expect(contentPage.noContentImage).toBeVisible();
     });
-    await test.step('Video Content Clean Up', async () => {
-        await contentPage.videoContentCleanUp();
+    await test.step('Verify Photo Content is cleaned up', async ({}) => {
+        await contentPage.navigateToContentPage();
+        await contentPage.clearSearchField();
+        await contentPage.searchData('Photo Content ' + testId);
         await expect(contentPage.noContentText).toBeVisible();
         await expect(contentPage.noContentImage).toBeVisible();
     });

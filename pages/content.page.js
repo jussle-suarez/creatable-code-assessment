@@ -128,7 +128,7 @@ class ContentPage extends BasePage {
     async searchDataFromMatchProductsTable(searchKey) {
         await this.searchMatchProductField.click();
         await this.searchMatchProductField.pressSequentially(searchKey, { delay: 50 });
-        await this.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('networkidle');
     }
 
     async clearSearchMatchProductsField() {
@@ -170,6 +170,7 @@ class ContentPage extends BasePage {
             await this.clickProductPhoto(productName);
         }
         await this.page.waitForTimeout(15000);
+        await this.page.waitForLoadState('networkidle');
         await this.doneButton.click();
     }
 
@@ -184,6 +185,7 @@ class ContentPage extends BasePage {
         await this.nextButton.click();
         await this.addProduct(productName);
         await this.page.waitForTimeout(5000);
+        await this.page.waitForLoadState('networkidle');
         await this.doneButton.click();
     }
 
@@ -199,6 +201,18 @@ class ContentPage extends BasePage {
         let isContentTitleDisplayed = await this.page.locator(`//div[contains(@data-testid,"content")]//div[text()="Photo Content ${this.testId}"]`).isVisible();
         if (isContentTitleDisplayed) {
             await this.clickContentTitleBasedOnContentName('Photo Content ' + this.testId);
+            await this.deleteButton.click();
+            await this.yesButton.click();
+        }
+    }
+
+    async photoContentCleanUpByName(productName) {
+        await this.page.goto('/');
+        await this.navigateToContentPage();
+        await this.searchData(productName);
+        let isContentTitleDisplayed = await this.page.locator(`//div[contains(@data-testid,"content")]//div[text()="${productName}"]`).isVisible();
+        if (isContentTitleDisplayed) {
+            await this.clickContentTitleBasedOnContentName(productName);
             await this.deleteButton.click();
             await this.yesButton.click();
         }
